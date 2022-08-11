@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public class GameController : MonoBehaviour
 {
@@ -11,12 +12,12 @@ public class GameController : MonoBehaviour
     // public Text scoreText;
     public bool isTurning = false;
     public bool isCollectedKey = false;
-    public GameObject gameOver;    
+    public GameObject gameOver;
 
     public static GameController instance;
     void Start()
     {
-        instance = this;   
+        instance = this;
     }
 
     // public void UpdateScoreText()
@@ -29,7 +30,7 @@ public class GameController : MonoBehaviour
         gameOver.SetActive(true);
     }
 
-    public void CollectKey() 
+    public void CollectKey()
     {
         isCollectedKey = true;
     }
@@ -44,7 +45,7 @@ public class GameController : MonoBehaviour
         return isTurning;
     }
 
-        public void ToggleTurning(bool state)
+    public void ToggleTurning(bool state)
     {
         isTurning = state;
     }
