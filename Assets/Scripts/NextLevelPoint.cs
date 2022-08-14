@@ -2,15 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
 
 public class NextLevelPoint : MonoBehaviour
 {
     public string levelName;
-    void OnCollisionEnter2D(Collision2D collision)
+    public CapsuleCollider2D m_playerFeet;
+    public TilemapCollider2D m_scenery;
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Player" && GameController.instance.IsCollectedKey())
+        Debug.Log($"isCollectedKey: {GameController.instance.IsCollectedKey()}");
+        if (collision.gameObject.tag == "Player" &&
+            GameController.instance.IsCollectedKey() &&
+            m_playerFeet.IsTouching(m_scenery))
         {
             SceneManager.LoadScene(levelName);
-        }    
+        }
     }
 }
