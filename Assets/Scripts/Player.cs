@@ -15,15 +15,18 @@ public class Player : MonoBehaviour
     public CapsuleCollider2D m_playerHead;
     public CapsuleCollider2D m_boxCapsule;
     public BoxCollider2D m_boxBox;
-
-    private Rigidbody2D _m_rigidBody2D;
+    public CapsuleCollider2D m_boxCapsule_2;
+    public BoxCollider2D m_boxBox_2;
+    
+    private Rigidbody2D _m_rigidBody2D; 
     private Transform _m_transform;
+    
 
     void Start()
     {
-        RotationManager.OnGravityChange += ApplyRotation;
         _m_rigidBody2D = GetComponent<Rigidbody2D>();
         _m_transform = GetComponent<Transform>();
+        RotationManager.OnGravityChange += ApplyRotation;
     }
 
     void Update()
@@ -34,13 +37,14 @@ public class Player : MonoBehaviour
 
     private void CheckDie()
     {
-        if(m_playerHead.IsTouching(m_boxCapsule) || m_playerHead.IsTouching(m_boxBox))
+        if(m_playerHead.IsTouching(m_boxCapsule) || m_playerHead.IsTouching(m_boxBox) || m_playerHead.IsTouching(m_boxCapsule_2) || m_playerHead.IsTouching(m_boxBox_2))
         {
+            RotationManager.OnGravityChange -= ApplyRotation;
             SceneManager.LoadScene(levelName);
         }
     }
 
-    private void ApplyRotation(bool isGravityChanging, float angle)
+    public void ApplyRotation(bool isGravityChanging, float angle)
     {
         if (isGravityChanging)
             DisableRigidBody(angle);
@@ -59,6 +63,8 @@ public class Player : MonoBehaviour
     private void DisableRigidBody(float angle)
     {
         Debug.Log("disable rigidbody");
+        Debug.Log(_m_rigidBody2D);
+        
         _m_rigidBody2D.constraints = RigidbodyConstraints2D.FreezePosition;
         _m_rigidBody2D.isKinematic = true;
         Flip(angle);
@@ -74,10 +80,22 @@ public class Player : MonoBehaviour
     {
         if (!GameController.instance.IsTurning() && (m_playerFeet.IsTouching(m_scenery) ||
              m_playerFeet.IsTouching(m_boxCapsule) ||
-              m_playerFeet.IsTouching(m_boxBox)))
+              m_playerFeet.IsTouching(m_boxBox) ||
+              m_playerFeet.IsTouching(m_boxCapsule_2) ||
+              m_playerFeet.IsTouching(m_boxBox_2)))
         {
             Vector3 movement = new(Input.GetAxis("Horizontal"), 0f, 0f);
             transform.position += Speed * Time.deltaTime * movement;
+        }
+    }
+
+     void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "Spikes")
+        {
+            // GameController.instance.ShowGameOver();
+            RotationManager.OnGravityChange -= ApplyRotation;
+            SceneManager.LoadScene(levelName);
         }
     }
 }

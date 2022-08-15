@@ -9,6 +9,7 @@ public class NextLevelPoint : MonoBehaviour
     public string levelName;
     public CapsuleCollider2D m_playerFeet;
     public TilemapCollider2D m_scenery;
+    public Player player;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -17,6 +18,7 @@ public class NextLevelPoint : MonoBehaviour
             GameController.instance.IsCollectedKey() &&
             m_playerFeet.IsTouching(m_scenery))
         {
+            RotationManager.OnGravityChange -= collision.gameObject.GetComponent<Player>().ApplyRotation;
             SceneManager.LoadScene(levelName);
         }
     }
