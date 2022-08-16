@@ -27,10 +27,6 @@ public class Player : MonoBehaviour
         _m_rigidBody2D = GetComponent<Rigidbody2D>();
         _m_transform = GetComponent<Transform>();
         RotationManager.OnGravityChange += ApplyRotation;
-        Debug.Log(GameController.instance);
-        string sceneName = SceneManager.GetActiveScene().name;
-    //     if (sceneName == "level_1") GameController.instance.level1Start = Time.time;
-    //     if (sceneName == "level_2") GameController.instance.level2Start = Time.time;
     }
 
     void Update()

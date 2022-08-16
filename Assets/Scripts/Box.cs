@@ -62,7 +62,7 @@ public class Box : MonoBehaviour
 
     private void Flip(float angle)
     {
-        Debug.Log("flip");
+        // Debug.Log("flip");
         Vector3 currentPosition = _m_transform.eulerAngles;
         _m_transform.eulerAngles =
             currentPosition + new Vector3(0f, 0f, -1 * angle);

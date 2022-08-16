@@ -19,8 +19,8 @@ public class NextLevelPoint : MonoBehaviour
             m_playerFeet.IsTouching(m_scenery))
         {
             RotationManager.OnGravityChange -= collision.gameObject.GetComponent<Player>().ApplyRotation;
-            SceneManager.LoadScene(levelName);
-            // GameController.instance.ShowFinishedGame();
+            // SceneManager.LoadScene(levelName);
+            GameController.instance.ShowFinishedGame();
         }
     }
 }
