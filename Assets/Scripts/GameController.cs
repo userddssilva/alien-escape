@@ -8,11 +8,17 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
 
-    // public int totalScore;
-    // public Text scoreText;
-    public bool isTurning = false;
+    public bool isGravityChanging = false;
     public bool isCollectedKey = false;
-    public GameObject gameOver;
+    public float lastAngle = 0f;
+
+    public int level1Turns = 0;
+    public int level2Turns = 0;
+    
+    public float level1Start = 0f;
+    public float level2Start = 0f;
+
+    public GameObject finishedGame;
 
     public static GameController instance;
     void Start()
@@ -20,14 +26,29 @@ public class GameController : MonoBehaviour
         instance = this;
     }
 
-    // public void UpdateScoreText()
-    // {
-    //     scoreText.text = totalScore.ToString();
-    // }
-
-    public void ShowGameOver()
+    public void ShowFinishedGame()
     {
-        gameOver.SetActive(true);
+        CountStars();
+        finishedGame.SetActive(true);
+    }
+
+    public void CountStars()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+        GameObject playerUI = GameObject.FindGameObjectWithTag("PlayerUI");
+        Image[] stars = playerUI.GetComponents<Image>();
+        int starsCount = 1;
+
+        if (sceneName == "level_1")
+        {
+            if (level1Turns <= 6) {
+                starsCount += 1;
+            }
+        }
+
+        if (starsCount == 2) {
+            stars[1].enabled = true;
+        }
     }
 
     public void CollectKey()
@@ -40,14 +61,14 @@ public class GameController : MonoBehaviour
         return isCollectedKey;
     }
 
-    public bool IsTurning()
+    public bool IsGravityChanging()
     {
-        return isTurning;
+        return isGravityChanging;
     }
 
-    public void ToggleTurning(bool state)
+    public void ToggleGravityChanging()
     {
-        isTurning = state;
+        isGravityChanging = !isGravityChanging;
     }
 
     public void RestartGame(string lvlName)

@@ -20,6 +20,7 @@ public class NextLevelPoint : MonoBehaviour
         {
             RotationManager.OnGravityChange -= collision.gameObject.GetComponent<Player>().ApplyRotation;
             SceneManager.LoadScene(levelName);
+            // GameController.instance.ShowFinishedGame();
         }
     }
 }

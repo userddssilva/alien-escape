@@ -27,6 +27,10 @@ public class Player : MonoBehaviour
         _m_rigidBody2D = GetComponent<Rigidbody2D>();
         _m_transform = GetComponent<Transform>();
         RotationManager.OnGravityChange += ApplyRotation;
+        Debug.Log(GameController.instance);
+        string sceneName = SceneManager.GetActiveScene().name;
+    //     if (sceneName == "level_1") GameController.instance.level1Start = Time.time;
+    //     if (sceneName == "level_2") GameController.instance.level2Start = Time.time;
     }
 
     void Update()
@@ -39,31 +43,35 @@ public class Player : MonoBehaviour
     {
         if(m_playerHead.IsTouching(m_boxCapsule) || m_playerHead.IsTouching(m_boxBox) || m_playerHead.IsTouching(m_boxCapsule_2) || m_playerHead.IsTouching(m_boxBox_2))
         {
-            RotationManager.OnGravityChange -= ApplyRotation;
-            SceneManager.LoadScene(levelName);
+           StartCoroutine(Die(0.75f));
         }
     }
 
     public void ApplyRotation(bool isGravityChanging, float angle)
     {
         if (isGravityChanging)
+        {
             DisableRigidBody(angle);
+        }
         else
+        {
             EnableRigidBody();
+        }
     }
 
     private void EnableRigidBody()
     {
-        Debug.Log("enable rigidbody");
+        // Debug.Log("enable rigidbody");
         _m_rigidBody2D.constraints = RigidbodyConstraints2D.None;
         _m_rigidBody2D.constraints = RigidbodyConstraints2D.FreezeRotation;
         _m_rigidBody2D.isKinematic = false;
+        GameController.instance.ToggleGravityChanging();
     }
 
     private void DisableRigidBody(float angle)
     {
-        Debug.Log("disable rigidbody");
-        Debug.Log(_m_rigidBody2D);
+        GameController.instance.ToggleGravityChanging();
+        // Debug.Log("disable rigidbody");
         
         _m_rigidBody2D.constraints = RigidbodyConstraints2D.FreezePosition;
         _m_rigidBody2D.isKinematic = true;
@@ -78,7 +86,7 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        if (!GameController.instance.IsTurning() && (m_playerFeet.IsTouching(m_scenery) ||
+        if ((m_playerFeet.IsTouching(m_scenery) ||
              m_playerFeet.IsTouching(m_boxCapsule) ||
               m_playerFeet.IsTouching(m_boxBox) ||
               m_playerFeet.IsTouching(m_boxCapsule_2) ||
@@ -89,13 +97,18 @@ public class Player : MonoBehaviour
         }
     }
 
-     void OnCollisionEnter2D(Collision2D collision)
+    private IEnumerator Die(float delay) 
+    {
+        // GameController.instance.ShowGameOver();
+        RotationManager.OnGravityChange -= ApplyRotation;
+        yield return new WaitForSeconds(delay);
+        SceneManager.LoadScene(levelName);
+    }
+    void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.tag == "Spikes")
         {
-            // GameController.instance.ShowGameOver();
-            RotationManager.OnGravityChange -= ApplyRotation;
-            SceneManager.LoadScene(levelName);
+            StartCoroutine(Die(0.35f));
         }
     }
 }
